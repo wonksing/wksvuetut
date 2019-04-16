@@ -4,6 +4,7 @@
     <canvas ref="canvas" id="canvas"></canvas>
     <img ref="img" id="img">
     <button type="button" @click="capture">Capture</button>
+    <button type="button" @click="searchTerm">Axios</button>
   </div>
 </template>
 
@@ -84,7 +85,43 @@ export default {
         this.canvas.height
       )
       this.$refs.img.src = this.canvas.toDataURL('image/jpeg', 1)
-      console.log(this.canvas.toDataURL('image/jpeg', 1))
+      var inputString = this.canvas.toDataURL('image/jpeg', 1)
+      var ind = inputString.indexOf(',')
+      inputString = inputString.substring(ind + 1)
+      var payload = {'instances': [{'b64': inputString}]}
+
+      console.log(JSON.stringify(payload))
+
+      // const url = 'https://127.0.0.1:8888/v1/models/adgds/versions/1:predict'
+      const url = 'https://192.168.0.8:8888/v1/models/adgds/versions/1:predict'
+      this.$http.post(url, JSON.stringify(payload))
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      // this.$http.post(url, {
+      //   headers: {
+      //     'accept': 'application/json'
+      //   },
+      //   body: JSON.stringify(payload)
+      // })
+      //   .then(function (response) {
+      //     console.log(response)
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error)
+      //   })
+    },
+    searchTerm: function () {
+      // using JSONPlaceholder
+      const baseURI = 'https://jsonplaceholder.typicode.com'
+      this.$http.get(`${baseURI}/posts`)
+        .then((result) => {
+          console.log(result)
+          this.posts = result.data
+        })
     }
   }
 }

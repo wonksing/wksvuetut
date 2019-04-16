@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const fs = require('fs')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -22,6 +23,12 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    https: true,
+    https: {
+        key: fs.readFileSync('/Users/wonk/projects/wk/wksvuetut/webcam/certs/server.key'),
+        cert: fs.readFileSync('/Users/wonk/projects/wk/wksvuetut/webcam/certs/server.pem'),
+        // ca: fs.readFileSync('/etc/letsencrypt/live/webrot360.tk/chain1.pem'),
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
