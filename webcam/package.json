@@ -17,6 +17,7 @@
     "ajv": "^6.10.0",
     "axios": "^0.18.0",
     "fs": "0.0.1-security",
+    "https-agent": "^1.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

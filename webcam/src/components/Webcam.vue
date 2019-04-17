@@ -1,10 +1,11 @@
 <template>
   <div>
     <video ref="video" id="video" autoplay muted="muted" style="max-height: 500px;"></video>
-    <canvas ref="canvas" id="canvas"></canvas>
-    <img ref="img" id="img">
     <button type="button" @click="capture">Capture</button>
     <button type="button" @click="searchTerm">Axios</button>
+    <input type="text" style="width: 200px;" v-model="message" placeholder="품명">
+    <canvas ref="canvas" id="canvas"></canvas>
+    <img ref="img" id="img">
   </div>
 </template>
 
@@ -20,7 +21,8 @@ export default {
       // 2d context
       canvasCtx: {},
       captures: [],
-      active: false
+      active: false,
+      message: '1'
     }
   },
   mounted () {
@@ -65,8 +67,8 @@ export default {
             .then(handleSuccess)
         })
     }
-    this.canvans.width = this.video.width
-    this.canvas.height = this.video.height
+    this.canvas.width = this.video.videoWidth
+    this.canvas.height = this.video.videoHeight
   },
   beforeDestroy () {
     this.active = false
@@ -90,13 +92,23 @@ export default {
       inputString = inputString.substring(ind + 1)
       var payload = {'instances': [{'b64': inputString}]}
 
-      console.log(JSON.stringify(payload))
+      // console.log(JSON.stringify(payload))
 
       // const url = 'https://127.0.0.1:8888/v1/models/adgds/versions/1:predict'
-      const url = 'https://192.168.0.8:8888/v1/models/adgds/versions/1:predict'
-      this.$http.post(url, JSON.stringify(payload))
+      const url = 'https://172.16.120.174:8888/v1/models/adgds/versions/1:predict'
+
+      const https = require('https')
+      var agent = new https.Agent({
+        rejectUnauthorized: false
+      })
+      const instance = this.$http.create({
+        httpsAgent: agent
+      })
+      var self = this
+      instance.post(url, JSON.stringify(payload))
         .then(function (response) {
-          console.log(response)
+          console.log('response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score * 100 + ')')
+          self.message = 'response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score * 100 + ')'
         })
         .catch(function (error) {
           console.log(error)
