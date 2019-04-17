@@ -1,11 +1,15 @@
 <template>
   <div>
-    <video ref="video" id="video" autoplay muted="muted" style="max-height: 500px;"></video>
-    <button type="button" @click="capture">Capture</button>
-    <button type="button" @click="searchTerm">Axios</button>
-    <input type="text" style="width: 200px;" v-model="message" placeholder="품명">
+    <div>
+      <video ref="video" id="video" autoplay muted="muted" style="max-height: 500px;"></video>
+    </div>
+    <div>
+      <button type="button" @click="capture">Capture</button>
+      <button type="button" @click="searchTerm">Axios</button>
+      <input type="text" style="width: 200px;" v-model="message" placeholder="품명">
+    </div>
     <canvas ref="canvas" id="canvas"></canvas>
-    <img ref="img" id="img">
+    <img ref="img" id="img" style="display:block;">
   </div>
 </template>
 
@@ -67,8 +71,8 @@ export default {
             .then(handleSuccess)
         })
     }
-    this.canvas.width = this.video.videoWidth
-    this.canvas.height = this.video.videoHeight
+    // this.canvas.width = this.video.videoWidth
+    // this.canvas.height = this.video.videoHeight
   },
   beforeDestroy () {
     this.active = false
@@ -79,6 +83,8 @@ export default {
   },
   methods: {
     capture () {
+      this.canvas.width = this.video.videoWidth
+      this.canvas.height = this.video.videoHeight
       this.canvasCtx.drawImage(
         this.video,
         0,
@@ -95,7 +101,8 @@ export default {
       // console.log(JSON.stringify(payload))
 
       // const url = 'https://127.0.0.1:8888/v1/models/adgds/versions/1:predict'
-      const url = 'https://172.16.120.174:8888/v1/models/adgds/versions/1:predict'
+      // const url = 'https://172.16.120.174:8888/v1/models/adgds/versions/1:predict'
+      const url = 'https://192.168.0.8:8888/v1/models/adgds/versions/1:predict'
 
       const https = require('https')
       var agent = new https.Agent({
