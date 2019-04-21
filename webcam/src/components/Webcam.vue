@@ -4,12 +4,24 @@
       <video ref="video" id="video" autoplay muted="muted" style="max-height: 500px;"></video>
     </div>
     <div>
-      <button type="button" @click="capture">Capture</button>
-      <button type="button" @click="searchTerm">Axios</button>
-      <input type="text" style="width: 200px;" v-model="message" placeholder="품명">
+      <button type="button" @click="capture" style="width:150px;height:40px">Capture</button>
+      <button type="button" @click="searchTerm" style="display:none;">Axios</button>
+      <input type="text" style="width: 200px; display:none;" v-model="message" placeholder="품명">
     </div>
-    <canvas ref="canvas" id="canvas"></canvas>
-    <img ref="img" id="img" style="display:block;">
+    <div align="left">
+      <label><span style="font-weight:bold">품명:&nbsp;</span></label><label>{{className}}</label>
+    </div>
+    <div align="left">
+      <label><span style="font-weight:bold">Class:&nbsp;</span></label><label>{{classCode}}</label>
+    </div>
+    <div align="left">
+      <label><span style="font-weight:bold">Score:&nbsp;</span></label><label>{{score}}</label>
+    </div>
+    <div align="left">
+      <label><span style="font-weight:bold">Response:&nbsp;</span></label><label>{{message}}</label>
+    </div>
+    <canvas ref="canvas" id="canvas" style="display:none;"></canvas>
+    <img ref="img" id="img" style="display:none;">
   </div>
 </template>
 
@@ -26,7 +38,10 @@ export default {
       canvasCtx: {},
       captures: [],
       active: false,
-      message: '1'
+      message: '1',
+      className: '',
+      classCode: 0,
+      score: 0
     }
   },
   mounted () {
@@ -61,6 +76,10 @@ export default {
       // this.decoded = facingMode
       const constraints = {
         facingMode: { ideal: 'environment' }
+        // width: { min: 240, ideal: 480, max: 1080 },
+        // height: { min: 360, ideal: 640, max: 1920 }
+        // width: { ideal: 480 },
+        // height: { ideal: 640 }
       }
       navigator.mediaDevices
         .getUserMedia({ video: constraints })
@@ -114,8 +133,12 @@ export default {
       var self = this
       instance.post(url, JSON.stringify(payload))
         .then(function (response) {
-          console.log('response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score * 100 + ')')
-          self.message = 'response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score * 100 + ')'
+          console.log('response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score + ')')
+          self.message = 'response: ' + response.data.class_name + '(' + response.data.class + '/' + response.data.score + ')'
+
+          self.className = response.data.class_name
+          self.classCode = response.data.class
+          self.score = response.data.score
         })
         .catch(function (error) {
           console.log(error)
