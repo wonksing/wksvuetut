@@ -120,7 +120,6 @@ export default {
       // console.log(JSON.stringify(payload))
 
       // const url = 'https://127.0.0.1:8888/v1/models/adgds/versions/1:predict'
-      // const url = 'https://172.16.120.174:8888/v1/models/adgds/versions/1:predict'
       const url = 'https://192.168.0.8:8888/v1/models/adgds/versions/1:predict'
 
       const https = require('https')

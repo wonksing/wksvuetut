@@ -6,6 +6,8 @@ import Webcam from '@/components/Webcam'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
+  scrollBehavior: () => ({y: 0}),
   routes: [
     {
       path: '/',
@@ -16,6 +18,10 @@ export default new Router({
       path: '/webcam',
       name: 'Webcam',
       component: Webcam
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 })
